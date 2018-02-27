@@ -13,7 +13,7 @@ https://ettingshausen.github.io/qrcode-scanner-js-demo/index.html
 
 ### LICENSE
 
-JavaScript QRCode reader for HTML5 enabled browser. 
+JavaScript QRCode reader for HTML5 enabled browser.   
 2011 Lazar Laszlo  http://lazarsoft.info
 
 WebcamJS

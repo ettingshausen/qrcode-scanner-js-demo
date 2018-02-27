@@ -17,7 +17,6 @@ JavaScript QRCode reader for HTML5 enabled browser.
 2011 Lazar Laszlo  http://lazarsoft.info
 
 WebcamJS
-
 2017 webcamjs https://github.com/jhuckaby/webcamjs
 
 

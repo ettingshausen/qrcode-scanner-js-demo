@@ -69,16 +69,68 @@
 		var succeed = false;
 		var int = -1;
 
-		Webcam.set({
+		var webcamOptions = {
 			width: 320,
 			height: 240,
 			image_format: 'jpeg',
-			jpeg_quality: 90
-		});
-		Webcam.attach('#my_camera');
-		Webcam.on('live', function () {
-			int = setInterval(snap, 500);  // 0.5s 
-		});
+			jpeg_quality: 90,
+		};
+
+		var attach = function () {
+			Webcam.attach('#my_camera');
+			Webcam.on('live', function () {
+				int = setInterval(snap, 500);  // 0.5s 
+			});
+		}
+
+		// if you don't need any additional options then use `var webcamOptions = true;`
+
+		// `enumerateDevices` is a method for getting all available media devices
+		if (typeof navigator.mediaDevices.enumerateDevices === 'undefined') {
+			// if method `enumerateDevices` doesn't support on the device we just run webcam
+			Webcam.set(webcamOptions);
+			attach();
+		} else {
+			navigator.mediaDevices.enumerateDevices()
+				.then(function (devices) {
+					// Get all cameras on the device
+					var cameras = devices.filter(function (device) {
+						return device.kind === 'videoinput';
+					});
+
+					var deviceId = null;
+
+					cameras.forEach(function (camera) {
+						// Search back camera on the device
+						if (camera.label.toLowerCase().search('back') > -1) {
+							deviceId = camera.deviceId;
+						}
+					});
+
+					// If we don't find the back camera we use last camera in the list
+					if (!deviceId && cameras.length) {
+						deviceId = cameras[cameras.length - 1].deviceId;
+					}
+
+					if (deviceId) {
+						// If we have `deviceId` of a camera we run webcam with the following params:
+						webcamOptions.constraints = {
+							deviceId: {
+								exact: deviceId
+							},
+							facingMode: 'environment'
+						}
+					}
+
+					Webcam.set(webcamOptions);
+					attach();
+				})
+				.catch(function (error) {
+					console.log(error);
+				});
+		}
+
+
 
 
 
